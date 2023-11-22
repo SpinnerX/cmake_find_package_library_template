@@ -14,7 +14,8 @@ project(${PROJECT_NAME})
 include(cmake/TestLibConfig.cmake)
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG true)
 
-# ${CMAKE_INSTALL_PREFIX} gets set when we are start building and not rebuilding the entire project
+# NOTE: ${CMAKE_INSTALL_PREFIX} gets set when we are start building and not rebuilding the entire project
+# ${CMAKE_SOURCE_DIR} is what gives is our current cmake directory
 message(STATUS "TestLib include path #1 is ---> \"${TEST_LIB_CURRENT_DIR}\"")
 message(STATUS "TestLib include path #2 is ---> \"${TEST_LIB_CURRENT_DIR}/TestLib\"")
 message(STATUS "TestLib include path #3 is ---> \"${TEST_LIB_CURRENT_DIR}/TestLib/Core\"")
@@ -25,17 +26,10 @@ include_directories(
     ${TEST_LIB_CURRENT_DIR}/TestLib/Core
 )
 
-# add_library(${PROJECT_NAME} INTERFACE)
-# add_library(FormatCpp ALIAS ${PROJECT_NAME})
 add_library(${PROJECT_NAME} SHARED ${TEST_LIB_SRC})
 add_library(Lib::Lib ALIAS ${PROJECT_NAME}) # Allows to alias the library
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY INTERPROCEDURAL_OPTIMIZATION True)
-
-# target_include_directories(${PROJECT_NAME} INTERFACE
-#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/TestLib/include>
-#   $<INSTALL_INTERFACE:TestLib/include>
-# )
 
 install(TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME}-targets
@@ -56,6 +50,5 @@ install(EXPORT ${PROJECT_NAME}-targets
 # When we install and specify the FILE or DIRECTORY, we are basically saying that those files or directories
 # are going to be installed to the default path
 # To see the default pathh type ccmake ., to see what the CMAKE_INSTALL_PREFIX is.
-# install(DIRECTORY include/formatCpp/core DESTINATION include/formatCpp) # Basically we are installing directory core to include/formatCpp when we install it
 install(DIRECTORY TestLib DESTINATION include) # Basically we are installing directory core to include/formatCpp when we install it
 # install(FILES ${HEADERS} DESTINATION include/formatCpp) # Installing the header files into include/formatCpp
